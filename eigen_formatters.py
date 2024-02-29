@@ -418,7 +418,6 @@ class SparseMatrix(Printer):
             Printer.__init__(self, data)
 
             if is_complex:
-                print("is comple ", is_complex)
                 val = self.data.GetValueForExpressionPath("[0]")
                 if val.GetValueForExpressionPath("._M_value").IsValid():
                     self.get = partial(Printer.evaluate_complex_double, self)
