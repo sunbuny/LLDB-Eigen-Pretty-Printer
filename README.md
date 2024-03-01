@@ -3,6 +3,8 @@
 LLDB Eigen Pretty Printer for matrices, arrays and quaternions of the [Eigen](http://eigen.tuxfamily.org) library.
 
 ## Update For Clion in Widnows
+> tested in CLion 2023.3.4
+
 If you want to use this script in windows with clion. Following these steps:
 1. copy the `eigen_formatters.py` file to `YOUR_PATH_TO_CLION\bin\lldb\helpers`
 2. modify the `jb_lldb_init.py`, and the following lines to the file end
