@@ -1,179 +1,13 @@
-# import lldb
-# import re
-# import os
-# from functools import partial
-
-# def __lldb_init_module (debugger, dict):
-
-#     debugger.HandleCommand('type summary add -F eigen_formatters.vec3d Eigen::Vector3d')
-#     debugger.HandleCommand('type summary add -F eigen_formatters.vecxd Eigen::VectorXd')
-#     debugger.HandleCommand('type summary add -F eigen_formatters.mat2d Eigen::Matrix2d')
-#     debugger.HandleCommand('type summary add -F eigen_formatters.mat3d -x \"Eigen::Matrix\"')
-#     #debugger.HandleCommand('type summary add -F eigen_formatters.matxd -x \"Eigen::Matrix\"')
-    
-# # Base formatter for Eigen Vectors
-# def _vec_formatter(data):
-#     return f"Size: {len(data)}\n(" + ", ".join([f"{x:.3f}" for x in data]) + ").T"
-
-
-# # Base formatter for Eigen Matrices
-# def _mat_formatter(data, rows, cols):
-#     format_str = f"Size: {rows} x {cols}\n"
-#     for y in range(rows):
-#         format_str += "|"
-#         for x in range(cols):
-#             pos = (y * cols) + x
-#             if str(data[pos])[0] != "-":
-#                 format_str += " "
-#             format_str += f" {data[pos]:.3f}"
-#         format_str += " |\n"
-
-#     return format_str[: len(format_str) - 1]
-
-
-# # Reinterpret Matrix Data
-# def _mat_reinterpret(data, rows, cols):
-#     transposed_data = [0] * len(data)
-#     for y in range(rows):
-#         for x in range(cols):
-#             new_pos = (y * cols) + x
-#             old_pos = (x * rows) + y
-
-#             transposed_data[old_pos] = data[new_pos]
-
-#     return transposed_data
-
-
-# def vec3f(valobj, internal_dict, options):
-#     data = valobj.children[0]
-#     m_storage = data.children[0]
-#     m_data = m_storage.children[0]
-#     array = m_data.children[0]
-#     floats = array.GetData().floats
-#     return _vec_formatter(floats)
-
-
-# def vecxf(valobj, internal_dict, options):
-#     data = valobj.children[0]
-#     m_storage = data.children[0]
-#     m_data = m_storage.children[0]
-#     rows = int(m_storage.GetChildMemberWithName("m_rows").GetValue())
-
-#     data_array = m_data.GetPointeeData(0, rows)
-#     floats = data_array.floats
-
-#     return _vec_formatter(floats)
-
-
-# def mat2f(valobj, internal_dict, options):
-#     data = valobj.children[0]
-#     m_storage = data.children[0]
-#     m_data = m_storage.children[0]
-#     array = m_data.children[0]
-#     floats = array.GetData().floats
-
-#     floats = _mat_reinterpret(floats, 2, 2)
-
-#     return _mat_formatter(floats, 2, 2)
-
-
-# def mat3f(valobj, internal_dict, options):
-#     data = valobj.children[0]
-#     m_storage = data.children[0]
-#     m_data = m_storage.children[0]
-#     array = m_data.children[0]
-#     floats = array.GetData().floats
-
-#     floats = _mat_reinterpret(floats, 3, 3)
-
-#     return _mat_formatter(floats, 3, 3)
-
-
-# def matxf(valobj, internal_dict, options):
-#     data = valobj.children[0]
-#     m_storage = data.children[0]
-#     m_data = m_storage.children[0]
-#     rows = int(m_storage.GetChildMemberWithName("m_rows").GetValue())
-#     cols = int(m_storage.GetChildMemberWithName("m_cols").GetValue())
-
-#     data_array = m_data.GetPointeeData(0, rows * cols)
-#     floats = data_array.floats
-
-#     floats = _mat_reinterpret(floats, rows, cols)
-
-#     return _mat_formatter(floats, rows, cols)
-
-
-# def vec3d(valobj, internal_dict, options):
-#     data = valobj.children[0]
-#     m_storage = data.children[0]
-#     m_data = m_storage.children[0]
-#     array = m_data.children[0]
-#     doubles = array.GetData().doubles
-#     return _vec_formatter(doubles)
-
-
-# def vecxd(valobj, internal_dict, options):
-#     data = valobj.children[0]
-#     m_storage = data.children[0]
-#     m_data = m_storage.children[0]
-#     rows = int(m_storage.GetChildMemberWithName("m_rows").GetValue())
-
-#     data_array = m_data.GetPointeeData(0, rows)
-#     doubles = data_array.doubles
-
-#     return _vec_formatter(doubles)
-
-
-# def mat2d(valobj, internal_dict, options):
-#     data = valobj.children[0]
-#     m_storage = data.children[0]
-#     m_data = m_storage.children[0]
-#     array = m_data.children[0]
-#     doubles = array.GetData().doubles
-
-#     doubles = _mat_reinterpret(doubles, 2, 2)
-
-#     return _mat_formatter(doubles, 2, 2)
-
-
-# def mat3d(valobj, internal_dict, options):
-#     data = valobj.children[0]
-#     m_storage = data.children[0]
-#     m_data = m_storage.children[0]
-#     array = m_data.children[0]
-#     doubles = array.GetData().doubles
-
-#     doubles = _mat_reinterpret(doubles, 3, 3)
-
-#     return _mat_formatter(doubles, 3, 3)
-
-
-# def matxd(valobj, internal_dict, options):
-#     data = valobj.children[0]
-#     m_storage = data.children[0]
-#     m_data = m_storage.children[0]
-#     rows = int(m_storage.GetChildMemberWithName("m_rows").GetValue())
-#     cols = int(m_storage.GetChildMemberWithName("m_cols").GetValue())
-
-#     data_array = m_data.GetPointeeData(0, rows * cols)
-#     doubles = data_array.doubles
-
-#     doubles = _mat_reinterpret(doubles, rows, cols)
-
-#     return _mat_formatter(doubles, rows, cols)
-
-
 import lldb
 import re
 import os
 from functools import partial
 
 def __lldb_init_module (debugger, dict):
-    debugger.HandleCommand('type summary add -x "^Eigen::Matrix<.*>$" -F eigen_formatters.eigen_matrix_print -p -r')
-    debugger.HandleCommand('type summary add -x "^Eigen::Array<.*>$" -F eigen_formatters.eigen_array_print -p -r')
-    debugger.HandleCommand('type summary add -x "^Eigen::Quaternion<.*>$" -F eigen_formatters.eigen_quaternion_print -p -r ')
-    debugger.HandleCommand('type summary add -x "^Eigen::SparseMatrix<.*>$" -F eigen_formatters.eigen_sparsematrix_print -p -r ')
+    debugger.HandleCommand('type summary add -x "^(const )?Eigen::Matrix<.*>( &)?$" -F eigen_formatters.eigen_matrix_print -p -r')
+    debugger.HandleCommand('type summary add -x "^(const )?Eigen::Array<.*>( &)?$" -F eigen_formatters.eigen_array_print -p -r')
+    debugger.HandleCommand('type summary add -x "^(const )?Eigen::Quaternion<.*>( &)?$" -F eigen_formatters.eigen_quaternion_print -p -r ')
+    debugger.HandleCommand('type summary add -x "^(const )?Eigen::SparseMatrix<.*>( &)?$" -F eigen_formatters.eigen_sparsematrix_print -p -r ')
 
 def evaluate_expression(valobj, expr):
     return valobj.GetProcess().GetSelectedThread().GetSelectedFrame().EvaluateExpression(expr)
@@ -186,7 +20,12 @@ class Printer:
         self.data = data
 
     def evaluate_real(self, index):
-        return "%1.8e" % float(evaluate_at_index(self.data, index).GetValue())
+        val = evaluate_at_index(self.data, index).GetValue()
+        if self.innerType.lower() in ["double", "float"]:
+            return "{:1.8f}".format(float(val))
+        else:
+            return val
+            
 
     def evaluate_bool(self, index):
         return "%d" % evaluate_at_index(self.data, index).GetValueAsUnsigned()
@@ -238,7 +77,7 @@ class Matrix(Printer):
             bool_key = "bool"
 
             if (type_str.find(complex_scalar) >= 0):
-                regex = re.compile(begin + complex_scalar + ".*>,.*>")
+                regex = re.compile(begin + complex_scalar + ".*?>,.*?>")
                 is_complex = True
 
                 if (type_str.find(begin + complex_scalar + bool_key) >= 0):
@@ -247,7 +86,7 @@ class Matrix(Printer):
                     is_bool = False
 
             else:
-                regex = re.compile(begin+".*>")
+                regex = re.compile(begin+".*?>")
                 is_complex = False
 
                 if (type_str.find(begin + bool_key) >= 0):
@@ -352,7 +191,7 @@ class SparseMatrix(Printer):
             bool_key = "bool"
 
             if (type_str.find(complex_scalar)>=0):
-                regex = re.compile(begin + complex_scalar + ".*>,.*>")
+                regex = re.compile(begin + complex_scalar + ".*?>,.*?>")
                 is_complex = True
 
                 if (type_str.find(begin + complex_scalar + bool_key) >= 0):
@@ -360,7 +199,7 @@ class SparseMatrix(Printer):
                 else:
                     is_bool = False
             else:
-                regex = re.compile(begin+".*>")
+                regex = re.compile(begin+".*?>")
                 is_complex = False
 
                 if (type_str.find(begin + bool_key) >= 0):
@@ -481,7 +320,7 @@ class SparseMatrix(Printer):
                 output += "[%d, %d] =" % (rows[index], cols[index])
                 output += vals[index].rjust(padding+1, ' ') + ", "
 
-        output += "\b\b }\n" if self.nonzeros else " }\n"
+        output += "}\n" if self.nonzeros else " }\n"
 
         return output
 
@@ -492,10 +331,9 @@ class Quaternion(Printer):
             valtype = val.GetType()
             type_str = valtype.GetDirectBaseClassAtIndex(0).GetName()
             begin = "Eigen::Quaternion<"
-            regex = re.compile(begin + ".*>")
+            regex = re.compile(begin + ".*?>")
 
             self.variety = regex.findall(type_str)[0]
-
             m = self.variety[len(begin):-1]
             template_params = m.split(",")
             template_params = [x.replace(" ", "") for x in template_params]
@@ -508,11 +346,12 @@ class Quaternion(Printer):
             self.DontAlign = (int(self.options) & 0x2)
             self.innerType = template_params[0]
 
-            data = val.GetValueForExpressionPath(".m_coeffs.m_storage.m_data.array")
+            coeffs = val.GetChildMemberWithName('m_coeffs')
+            data = coeffs.children[0].GetValueForExpressionPath(".m_storage.m_data.array")
             Printer.__init__(self, data)
             self.variety = "Quaternion"
             self.get = partial(Printer.evaluate_real, self)
-        except:
+        except Exception as e:
             self.variety = -1
 
     def to_string(self):
@@ -530,12 +369,12 @@ class Quaternion(Printer):
 
 def eigen_matrix_print (valobj,internal_dict):
 
-    # if valobj.GetType().IsReferenceType():
-        # val = valobj.Dereference()
-    # else:
-        # val = valobj
+    if valobj.GetType().IsReferenceType():
+        val = valobj.Dereference()
+    else:
+        val = valobj
 
-    matrix = Matrix("Matrix", valobj)
+    matrix = Matrix("Matrix", val)
 
     if (matrix.variety == -1):
         return ""
@@ -544,7 +383,12 @@ def eigen_matrix_print (valobj,internal_dict):
 
 def eigen_array_print (valobj,internal_dict):
 
-    array = Matrix("Array", valobj)
+    if valobj.GetType().IsReferenceType():
+        val = valobj.Dereference()
+    else:
+        val = valobj
+
+    array = Matrix("Array", val)
 
     if (array.variety == -1):
         return ""
@@ -553,7 +397,11 @@ def eigen_array_print (valobj,internal_dict):
 
 def eigen_quaternion_print (valobj,internal_dict):
 
-    quaternion = Quaternion(valobj)
+    if valobj.GetType().IsReferenceType():
+        val = valobj.Dereference()
+    else:
+        val = valobj
+    quaternion = Quaternion(val)
 
     if (quaternion.variety == -1):
         return ""
@@ -562,7 +410,12 @@ def eigen_quaternion_print (valobj,internal_dict):
 
 def eigen_sparsematrix_print (valobj,internal_dict):
 
-    sparsematrix = SparseMatrix(valobj)
+    if valobj.GetType().IsReferenceType():
+        val = valobj.Dereference()
+    else:
+        val = valobj
+
+    sparsematrix = SparseMatrix(val)
 
     if (sparsematrix.variety == -1):
         return ""
