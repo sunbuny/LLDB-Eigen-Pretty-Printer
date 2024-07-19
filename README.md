@@ -27,7 +27,7 @@ If you want to use this script in windows with clion. Following these steps:
    ```
    Then you can see the eigen formatter is here.
 3. Now restart a exe in debug mode, and you can see the eigen variable is correctly interpreted
-
+refer to: [CLion Debugging – Beyond the Basics – Part 3: Beyond Local](https://blog.jetbrains.com/clion/2021/05/clion-debugging-beyond-the-basics-part-3-beyond-local/)
 
 ## Example
 
