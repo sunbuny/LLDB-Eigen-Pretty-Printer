@@ -6,29 +6,26 @@ LLDB Eigen Pretty Printer for matrices, arrays and quaternions of the [Eigen](ht
 > tested in CLion 2023.3.4
 
 If you want to use this script in windows with clion. Following these steps:
-1. copy the `eigen_formatters.py` file to `YOUR_PATH_TO_CLION\bin\lldb\helpers`
-2. modify the `jb_lldb_init.py`, and the following lines to the file end
-    ```python
-    lldb.debugger.HandleCommand('command script import eigen_formatters')
-    ```
-    this line of code, import the eigen formatters and init it. You can find the 
-    formatters is registered by the cmd `type summary list`, the result will like these: 
+1. create `.lldbinit` in your home dir (C:\Users\YOUR_USER_NAME)
+2. add line `command script import "YOUR_PATH_TO_FILE/eigen_formatters.py"`
+   this line of code, import the eigen formatters and init it. You can find the 
+   formatters is registered by the cmd `type summary list`, the result will like these: 
 
-    ```
-    (lldb) type summary list
-    -----------------------
-    Category: default
-    -----------------------
-    ^Eigen::Matrix<.*>$:  (skip pointers) (skip references)
-          eigen_formatters.eigen_matrix_print(valobj,internal_dict)
-    ^Eigen::Array<.*>$:  (skip pointers) (skip references)
-          eigen_formatters.eigen_array_print(valobj,internal_dict)
-    ^Eigen::Quaternion<.*>$:  (skip pointers) (skip references)
-          eigen_formatters.eigen_quaternion_print(valobj,internal_dict)
-    ^Eigen::SparseMatrix<.*>$:  (skip pointers) (skip references)
-          eigen_formatters.eigen_sparsematrix_print(valobj,internal_dict)
-    ```
-    Then you can see the eigen formatter is here.
+   ```
+   (lldb) type summary list
+   -----------------------
+   Category: default
+   -----------------------
+   ^Eigen::Matrix<.*>$:  (skip pointers) (skip references)
+         eigen_formatters.eigen_matrix_print(valobj,internal_dict)
+   ^Eigen::Array<.*>$:  (skip pointers) (skip references)
+         eigen_formatters.eigen_array_print(valobj,internal_dict)
+   ^Eigen::Quaternion<.*>$:  (skip pointers) (skip references)
+         eigen_formatters.eigen_quaternion_print(valobj,internal_dict)
+   ^Eigen::SparseMatrix<.*>$:  (skip pointers) (skip references)
+         eigen_formatters.eigen_sparsematrix_print(valobj,internal_dict)
+   ```
+   Then you can see the eigen formatter is here.
 3. Now restart a exe in debug mode, and you can see the eigen variable is correctly interpreted
 
 
